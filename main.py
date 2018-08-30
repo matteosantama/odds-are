@@ -6,8 +6,7 @@ from match import Match
 # import library packages
 
 
-
-if __name__ == '__main__':
+def main():
     bovscr = bovada.Bovada()
 
     # retrieve a list of upcoming Match objects with Bovada odds
@@ -15,3 +14,6 @@ if __name__ == '__main__':
     upcoming_matches = bovscr.get_matches('nfl')
     for um in upcoming_matches:
         print um
+
+if __name__ == '__main__':
+    main()
