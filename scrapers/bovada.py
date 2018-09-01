@@ -9,8 +9,6 @@ import requests
 # global variables
 league_to_sport = {
     'nfl': 'football',
-    'nba': 'basketball',
-    'mlb': 'baseball'
 }
 
 
@@ -33,7 +31,7 @@ class Bovada(object):
 
 
     def parse_json(self, data):
-        matches = []
+        matches = {}
         for event in data:
             # parse home and away teams
             competitors = event['competitors']
@@ -52,7 +50,7 @@ class Bovada(object):
             # construct datetime object. divide by 1000 to fix time
             time = dt.fromtimestamp(event['startTime']/1000)
             m = match.Match(home, away, hodds, aodds, hodds_site, aodds_site, time)
-            matches.append(m)
+            matches[m.key] = m
 
         return matches
 
