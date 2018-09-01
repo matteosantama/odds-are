@@ -9,6 +9,21 @@ from match import Match
 LEAGUE = 'nfl'
 
 
+def print_matches(bovada_matches, xbet_matches, bm_matches):
+    for b in bov_matches:
+        print bov_matches[b]
+
+    print '\n'
+
+    for x in xbet_matches:
+        print xbet_matches[x]
+
+    print '\n'
+
+    for bm in bm_matches:
+        print bm_matches[bm]
+
+
 def update_odds(primary, secondary):
     for key, match in secondary.iteritems():
         if key not in primary:
@@ -21,8 +36,15 @@ def update_odds(primary, secondary):
                 print 'Found better odds for %s on %s' % (match.away_team, match.aodds_site)
 
 
+def find_profit(matches):
+    for k, v in matches.iteritems():
+        if v.home_odds + v.away_odds > 0:
+            print 'Found profit opportunity'
+            print v
+
+
 def main():
-    # TODO: refactor as seperate Driver class
+    print 'Analyzing upcoming matches...'
 
     bovscr = bovada.Bovada()
     xbetscr = xbet.Xbet()
@@ -38,20 +60,8 @@ def main():
     update_odds(bov_matches, xbet_matches)
     update_odds(bov_matches, bm_matches)
 
-    print '\n'
-
-    for b in bov_matches:
-        print bov_matches[b]
-
-    print '\n'
-
-    for x in xbet_matches:
-        print xbet_matches[x]
-
-    print '\n'
-
-    for bm in bm_matches:
-        print bm_matches[bm]
+    find_profit(bov_matches)
+    print 'Execution complete'
 
 
 if __name__ == '__main__':

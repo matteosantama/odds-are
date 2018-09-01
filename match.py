@@ -12,8 +12,8 @@ class Match(object):
         sanitized_away = away_team.title().strip()
         self.home_team = sanitized_home
         self.away_team = sanitized_away
-        self.home_odds = home_odds
-        self.away_odds = away_odds
+        self.home_odds = int(home_odds)
+        self.away_odds = int(away_odds)
         self.hodds_site = hodds_site
         self.aodds_site = aodds_site
         self.game_time = time
