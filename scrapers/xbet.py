@@ -40,7 +40,7 @@ class Xbet(object):
         ahtml = html.find('div', afilter).find('button', attrs=search_filter)
         xb = 'xbet.ag'
         m = match.Match(hhtml['data-team'], ahtml['data-team'], hhtml['data-odds'], ahtml['data-odds'], xb, xb)
-
+        # return an individual match
         return m
 
 
@@ -53,5 +53,5 @@ class Xbet(object):
         for d in dates:
             m = self.extract_match(d)
             matches[m.key] = m
-
+        # return a dictionary of matches from xbet keyed by their m.key
         return matches
