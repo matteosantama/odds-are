@@ -4,6 +4,7 @@ import match
 # import library packages
 from datetime import datetime as dt
 import requests
+import sys
 
 
 # global variables
@@ -14,8 +15,10 @@ league_to_sport = {
 
 class Bovada(object):
 
+
     def __init__(self):
         self.api_url = 'https://www.bovada.lv/services/sports/event/v2/events/A/description/%s/%s'
+
 
     def request_json(self, league):
         url = self.api_url % (league_to_sport[league], league)
@@ -31,35 +34,49 @@ class Bovada(object):
         return r.json()
 
 
-    def parse_json(self, data):
-        matches = {}
-        for event in data:
-            # parse home and away teams
-            competitors = event['competitors']
-            home = competitors[0]['name'] if competitors[0]['home'] else competitors[1]['name']
-            away = competitors[1]['name'] if competitors[0]['home'] else competitors[1]['name']
-            # pick out odds in american format
-            outcomes = event['displayGroups'][0]['markets'][1]['outcomes']
-            if home is outcomes[0]['description']:
-                hodds = outcomes[0]['price']['american']
-                aodds = outcomes[1]['price']['american']
-            else:
-                aodds = outcomes[0]['price']['american']
-                hodds = outcomes[1]['price']['american']
-            # bpth odds are pulled from bovada
-            hodds_site = aodds_site = 'bovada'
-            # construct datetime object. divide by 1000 to fix time
-            time = dt.fromtimestamp(event['startTime']/1000)
-            m = match.Match(home, away, hodds, aodds, hodds_site, aodds_site, time)
-            matches[m.key] = m
+    def get_outcomes(self, markets):
+        for m in markets:
+            if m['description'] == 'Moneyline':
+                return m['outcomes']
+        return None
 
-        return matches
+
+    def extract_match(self, event):
+        # parse home and away teams
+        competitors = event['competitors']
+        home = competitors[0]['name'] if competitors[0]['home'] else competitors[1]['name']
+        away = competitors[1]['name'] if competitors[0]['home'] else competitors[1]['name']
+
+        # extract outcomes from moneyline block in json
+        outcomes = self.get_outcomes(event['displayGroups'][0]['markets'])
+
+        # handle the case where moneyline odds are not provided
+        if len(outcomes) == 0:
+            hodds = -sys.maxint - 1
+            aodds = -sys.maxint - 1
+        elif home is outcomes[0]['description']:
+            hodds = outcomes[0]['price']['american']
+            aodds = outcomes[1]['price']['american']
+        else:
+            aodds = outcomes[0]['price']['american']
+            hodds = outcomes[1]['price']['american']
+
+        # bpth odds are pulled from bovada
+        hodds_site = aodds_site = 'bovada'
+        # construct datetime object. divide by 1000 to fix time
+        time = dt.fromtimestamp(event['startTime']/1000)
+        m = match.Match(home, away, hodds, aodds, hodds_site, aodds_site, time)
+
+        return m
 
 
     def get_matches(self, sport):
         json = self.request_json(sport)
         # isolate the useful part of the json response
         events = json[0]['events']
-        # parse the json and construct a list of upcoming Match objects
-        upcoming = self.parse_json(events)
-        return upcoming
+        matches = {}
+        for ev in events:
+            m = self.extract_match(ev)
+            matches[m.key] = m
+
+        return matches
