@@ -5,6 +5,7 @@ import match
 from bs4 import BeautifulSoup
 import requests
 import sys
+import math
 
 
 # global variables
@@ -36,18 +37,36 @@ class Bookmaker(object):
 
 
     def extract_match(self, html):
-        # html parsing strings
-        search_filter = {'data-wager-type':'ml'}
-        hfilter = 'myb-sportbook__row-first-team'
-        afilter = 'myb-sportbook__row-second-team'
-        home_html = html.find('div', hfilter).find('button', attrs=search_filter)
-        away_html = html.find('div', afilter).find('button', attrs=search_filter)
+        visitor_html = html.find('div', class_='vTeam')
+        home_html = html.find('div', class_='hTeam')
+
+        visitor = next(visitor_html.find('div', class_='team').h3.stripped_strings)
+        vodds = visitor_html.find('div', class_='money').span.span
+        if vodds is not None:
+            vodds = int(vodds.text)
+        else:
+            vodds = float('-inf')
+
+        home = next(home_html.find('div', class_='team').h3.stripped_strings)
+        hodds = home_html.find('div', class_='money').span.span
+        if hodds is not None:
+            hodds = int(hodds.text)
+        else:
+            hodds = float('-inf')
+
+        site = 'bookmaker.eu'
+        m = match.Match(home, visitor, hodds, vodds, site, site)
+        return m
 
 
     def get_matches(self, league):
         # raw_html returns a string of the html
         raw_html = self.request_html(league)
         soup = BeautifulSoup(raw_html, 'html.parser')
-        dates = soup.find_all('ul')
-        for d in dates:
-            print d
+        matchups = soup.find_all('div', class_='matchup')
+        matches = {}
+        for mu in matchups:
+            odds = mu.ul.find('li', class_='odds')
+            m = self.extract_match(odds)
+            matches[m.key] = m
+        return matches
