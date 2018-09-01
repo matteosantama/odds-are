@@ -3,6 +3,7 @@ from scrapers import bovada
 from scrapers import xbet
 from scrapers import bookmaker
 from scrapers import intertops
+from scrapers import heritage
 from match import Match
 
 
@@ -51,6 +52,7 @@ def main():
     xbetscr = xbet.Xbet()
     bmscr = bookmaker.Bookmaker()
     interscr = intertops.Intertops()
+    herscr = heritage.Heritage()
 
     # retrieve a dict of upcoming Match objects with Bovada odds
     # matches keyed by match_id
@@ -58,11 +60,13 @@ def main():
     xbet_matches = xbetscr.get_matches(LEAGUE)
     bm_matches = bmscr.get_matches(LEAGUE)
     it_matches = interscr.get_matches(LEAGUE)
+    her_matches = herscr.get_matches(LEAGUE)
 
     # compare scraped odds and update matches
     update_odds(bov_matches, xbet_matches)
     update_odds(bov_matches, bm_matches)
     update_odds(bov_matches, it_matches)
+    update_odds(bov_matches, her_matches)
     find_profit(bov_matches)
     print 'Execution complete'
 
