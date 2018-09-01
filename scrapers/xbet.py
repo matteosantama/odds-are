@@ -23,8 +23,9 @@ class Xbet(object):
         r = requests.get(url)
         try:
             r.raise_for_status()
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as e:
             print 'Error attempting to contact %s' % r.url
+            print e
             print 'Exiting...'
             sys.exit(1)
 
