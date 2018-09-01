@@ -2,6 +2,7 @@
 from scrapers import bovada
 from scrapers import xbet
 from scrapers import bookmaker
+from scrapers import intertops
 from match import Match
 
 
@@ -40,7 +41,7 @@ def find_profit(matches):
     for k, v in matches.iteritems():
         if v.home_odds + v.away_odds > 0:
             print 'Found profit opportunity'
-            print v
+            v.print_with_site()
 
 
 def main():
@@ -49,17 +50,19 @@ def main():
     bovscr = bovada.Bovada()
     xbetscr = xbet.Xbet()
     bmscr = bookmaker.Bookmaker()
+    interscr = intertops.Intertops()
 
     # retrieve a dict of upcoming Match objects with Bovada odds
     # matches keyed by match_id
     bov_matches = bovscr.get_matches(LEAGUE)
     xbet_matches = xbetscr.get_matches(LEAGUE)
     bm_matches = bmscr.get_matches(LEAGUE)
+    it_matches = interscr.get_matches(LEAGUE)
 
     # compare scraped odds and update matches
     update_odds(bov_matches, xbet_matches)
     update_odds(bov_matches, bm_matches)
-
+    update_odds(bov_matches, it_matches)
     find_profit(bov_matches)
     print 'Execution complete'
 

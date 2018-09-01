@@ -30,6 +30,11 @@ class Match(object):
             return return_str % (self.away_team, self.away_odds, self.home_team, self.home_odds)
 
 
+    def print_with_site(self):
+        string = '%s (%s) on %s at %s (%s) on %s'
+        return string % (self.away_team, self.away_odds, self.aodds_site, self.home_team, self.home_odds, self.hodds_site)
+
+
     def __eq__(self, obj):
         return instance(obj, Match) and obj.key == self.key
 
