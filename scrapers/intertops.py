@@ -5,6 +5,7 @@ import match
 from bs4 import BeautifulSoup
 import requests
 import sys
+import logging
 
 
 class Intertops(object):
@@ -12,7 +13,7 @@ class Intertops(object):
 
     def __init__(self):
         self.base_url = 'https://sports.intertops.eu/en/Bets/Competition/1018'
-
+        self.logger = logging.getLogger(__name__)
 
     def request_html(self):
         url = self.base_url
@@ -20,9 +21,7 @@ class Intertops(object):
         try:
             r.raise_for_status()
         except requests.exceptions.RequestException as e:
-            print 'Error attempting to contact %s' % r.url
-            print e
-            print 'Exiting...'
+            self.logging.exception('Error attempting to contact %s', r.url)
             sys.exit(1)
 
         return r.content

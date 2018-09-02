@@ -5,6 +5,7 @@ import match
 from bs4 import BeautifulSoup
 import requests
 import sys
+import logging
 
 # global variables
 league_to_sport = {
@@ -16,7 +17,7 @@ class Xbet(object):
 
     def __init__(self):
         self.base_url = 'https://xbet.ag/sportsbook/%s/'
-
+        self.logger = logging.getLogger(__name__)
 
     def request_html(self, league):
         url = self.base_url % league
@@ -24,9 +25,7 @@ class Xbet(object):
         try:
             r.raise_for_status()
         except requests.exceptions.RequestException as e:
-            print 'Error attempting to contact %s' % r.url
-            print e
-            print 'Exiting...'
+            self.logging.exception('Error attempting to contact %s', r.url)
             sys.exit(1)
 
         return r.content

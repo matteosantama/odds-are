@@ -1,4 +1,5 @@
 import smtplib
+import logging
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
@@ -9,7 +10,8 @@ class Emailer(object):
         self.sender = 'msantdev@gmail.com'
         self.recipients = ['matteosantama@gmail.com']
         self.username = 'msantdev'
-        self.psswd = 'whtrad1ng'
+        self.psswd = 'fake'
+        self.logger = logging.getLogger(__name__)
 
 
     def send_mail(self, subject, body):
@@ -21,6 +23,8 @@ class Emailer(object):
         msg['Subject'] = subject
         msg['From'] = self.sender
         msg['To'] = ', '.join(self.recipients)
+
+        self.logger.info('Sending email with subject %s', subject)
 
         server_ssl.sendmail(self.sender, self.recipients, msg.as_string())
         server_ssl.close()

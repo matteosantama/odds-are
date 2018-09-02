@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import requests
 import sys
 import math
+import logging
 
 
 # global variables
@@ -19,7 +20,7 @@ class Bookmaker(object):
 
     def __init__(self):
         self.base_url = 'https://www.bookmaker.eu/live-lines/%s/%s'
-
+        self.logger = logging.getLogger(__name__)
 
     def request_html(self, league):
         url = self.base_url % (league_to_sport[league], league)
@@ -28,9 +29,7 @@ class Bookmaker(object):
         try:
             r.raise_for_status()
         except requests.exceptions.RequestException as e:
-            print 'Error attempting to contact %s' % r.url
-            print e
-            print 'Exiting...'
+            self.logging.exception('Error attempting to contact %s', r.url)
             sys.exit(1)
 
         return r.content

@@ -5,6 +5,7 @@ import match
 import requests
 import json
 import sys
+import logging
 
 
 league_to_sport = {
@@ -17,7 +18,7 @@ class Heritage(object):
 
     def __init__(self):
         self.base_url = 'https://web1.heritagesports.eu/hstw/v2/search/eventsBySportSubSport?periodNumber=0&sport=%s&subSport=%s'
-
+        self.logger = logging.getLogger(__name__)
 
     def request_html(self, league):
         # takes an UPPER version of league as the parameter
@@ -31,9 +32,7 @@ class Heritage(object):
         try:
             r.raise_for_status()
         except requests.exceptions.RequestException as e:
-            print 'Error attempting to contact %s' % r.url
-            print e
-            print 'Exiting...'
+            self.logging.exception('Error attempting to contact %s', r.url)
             sys.exit(1)
 
         return r.json()

@@ -5,6 +5,7 @@ import match
 from datetime import datetime as dt
 import requests
 import sys
+import logging
 
 
 # global variables
@@ -18,7 +19,7 @@ class Bovada(object):
 
     def __init__(self):
         self.api_url = 'https://www.bovada.lv/services/sports/event/v2/events/A/description/%s/%s'
-
+        self.logger = logging.getLogger(__name__)
 
     def request_json(self, league):
         url = self.api_url % (league_to_sport[league], league)
@@ -26,9 +27,7 @@ class Bovada(object):
         try:
             r.raise_for_status()
         except requests.exceptions.RequestException as e:
-            print 'Error attempting to contact %s' % r.url
-            print e
-            print 'Exiting...'
+            self.logging.exception('Error attempting to contact %s', r.url)
             sys.exit(1)
 
         return r.json()

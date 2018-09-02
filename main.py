@@ -7,24 +7,32 @@ from scrapers import heritage
 from match import Match
 from emailer import Emailer
 
+# library imports
+import logging
+
 
 LEAGUE = 'nfl'
 PROF = 'Sure Profit Opportunities'
 MUS = 'Upcoming Matchups'
 
+# init and configure logger object
+logger = logging.getLogger(__name__)
+FORMAT = '%(asctime)s:%(levelname)s: %(message)s'
+DATEFMT = '%m/%d/%Y %I:%M:%S%p'
+logging.basicConfig(filename = 'output.log', format=FORMAT, datefmt = DATEFMT, level = logging.INFO)
+
 
 def update_odds(primary, secondary):
     for key, match in secondary.iteritems():
         if key not in primary:
-            print 'ERROR: Could not find match'
-            print match
+            logger.error('Could not find match for: %s', str(match))
         else:
             if match.home_odds > primary[key].home_odds:
-                print 'Found better odds for %s on %s' % (match.home_team, match.hodds_site)
+                logger.info('Found better odds for %s on %s', match.home_team, match.hodds_site)
                 primary[key].home_odds = match.home_odds
                 primary[key].hodds_site = match.hodds_site
             if match.away_odds > primary[key].away_odds:
-                print 'Found better odds for %s on %s' % (match.away_team, match.aodds_site)
+                logger.info('Found better odds for %s on %s', match.home_team, match.hodds_site)
                 primary[key].away_odds = match.away_odds
                 primary[key].aodds_site = match.aodds_site
 
@@ -45,36 +53,40 @@ def upcoming(matches):
 
 
 def main():
-    print 'Analyzing upcoming matches...'
+    logger.info('Initializing scrapers and performing web requests')
 
     # init all scraper classes
     bov = bovada.Bovada()
     xbt = xbet.Xbet()
     bkmkr = bookmaker.Bookmaker()
     inter = intertops.Intertops()
-    heri = heritage.Heritage()
+    # heri = heritage.Heritage()
 
     # init emailer class
     mailer = Emailer()
 
     # use bovada as baseline odds
     matches = bov.get_matches(LEAGUE)
+    logger.info('Successfully retrieved odds from bovada.lv')
 
 
     # retrieve heritage data and update for better off
-    new_odds = heri.get_matches(LEAGUE)
-    update_odds(matches, new_odds)
+    # new_odds = heri.get_matches(LEAGUE)
+    # update_odds(matches, new_odds)
 
     # retrieve xbet data and update for better odds
     new_odds = xbt.get_matches(LEAGUE)
+    logger.info('Successfully retrieved odds from xbet.ag')
     update_odds(matches, new_odds)
 
     # retrieve bookmaker data and update for better odds
     new_odds = bkmkr.get_matches(LEAGUE)
+    logger.info('Successfully retrieved odds from bookmaker.eu')
     update_odds(matches, new_odds)
 
     # retrieve intertops data and update for better odds
     new_odds = inter.get_matches(LEAGUE)
+    logger.info('Successfully retrieved odds from intertops.eu')
     update_odds(matches, new_odds)
 
 
@@ -84,10 +96,10 @@ def main():
     match_strings = upcoming(matches)
 
     # send profit opps with new line characters inserted
-    mailer.send_mail(PROF, '\n'.join(opps))
+    # mailer.send_mail(PROF, '\n'.join(opps))
     mailer.send_mail(MUS, '\n'.join(match_strings))
 
-    print 'Execution complete'
+    logger.info('Execution successfully completed')
 
 
 if __name__ == '__main__':
