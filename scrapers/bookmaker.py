@@ -17,10 +17,10 @@ league_to_sport = {
 
 class Bookmaker(object):
 
-
     def __init__(self):
         self.base_url = 'https://www.bookmaker.eu/live-lines/%s/%s'
         self.logger = logging.getLogger(__name__)
+
 
     def request_html(self, league):
         url = self.base_url % (league_to_sport[league], league)

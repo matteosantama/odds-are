@@ -14,10 +14,10 @@ league_to_sport = {
 
 class Xbet(object):
 
-
     def __init__(self):
         self.base_url = 'https://xbet.ag/sportsbook/%s/'
         self.logger = logging.getLogger(__name__)
+
 
     def request_html(self, league):
         url = self.base_url % league

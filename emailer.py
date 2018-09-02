@@ -3,14 +3,14 @@ import logging
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-class Emailer(object):
 
+class Emailer(object):
 
     def __init__(self):
         self.sender = 'msantdev@gmail.com'
         self.recipients = ['matteosantama@gmail.com']
         self.username = 'msantdev'
-        self.psswd = 'fake'
+        self.psswd = 'whtrad1ng'
         self.logger = logging.getLogger(__name__)
 
 
