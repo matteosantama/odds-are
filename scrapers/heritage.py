@@ -52,7 +52,7 @@ class Heritage(object):
         outcomes = self.moneyline_outcomes(json)
         for oc in outcomes:
             if oc is None:
-                hodds = vodds = -sys.maxint - 1
+                hodds = vodds = -sys.maxsize - 1
             elif oc['outcome'] == home:
                 hodds = oc['price']
             elif oc['outcome'] == visitor:

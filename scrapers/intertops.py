@@ -37,8 +37,8 @@ class Intertops(object):
             aodds = aodds.text.strip()
             hodds = hodds.text.strip()
         except AttributeError:
-            aodds = -sys.maxint - 1
-            hodds = -sys.maxint - 1
+            aodds = -sys.maxsize - 1
+            hodds = -sys.maxsize - 1
 
         site = 'intertops.eu'
         m = match.Match(home, away, hodds, aodds, site, site)

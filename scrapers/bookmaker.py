@@ -44,14 +44,14 @@ class Bookmaker(object):
         if vodds is not None:
             vodds = int(vodds.text)
         else:
-            vodds = -sys.maxint - 1
+            vodds = -sys.maxsize - 1
 
         home = next(home_html.find('div', class_='team').h3.stripped_strings)
         hodds = home_html.find('div', class_='money').span.span
         if hodds is not None:
             hodds = int(hodds.text)
         else:
-            hodds = -sys.maxint - 1
+            hodds = -sys.maxsize - 1
 
         site = 'bookmaker.eu'
         m = match.Match(home, visitor, hodds, vodds, site, site)

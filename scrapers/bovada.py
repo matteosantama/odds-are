@@ -51,8 +51,8 @@ class Bovada(object):
 
         # handle the case where moneyline odds are not provided
         if len(outcomes) == 0:
-            hodds = -sys.maxint - 1
-            aodds = -sys.maxint - 1
+            hodds = -sys.maxsize - 1
+            aodds = -sys.maxsize - 1
         elif home is outcomes[0]['description']:
             hodds = outcomes[0]['price']['american']
             aodds = outcomes[1]['price']['american']
