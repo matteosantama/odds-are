@@ -1,6 +1,6 @@
 import smtplib
 import logging
-from email.mime.MIMEText import MIMEText
+from email.mime.mimetext import MIMEText
 
 
 class Emailer(object):
