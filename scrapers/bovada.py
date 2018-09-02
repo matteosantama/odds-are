@@ -62,7 +62,7 @@ class Bovada(object):
             hodds = outcomes[1]['price']['american']
 
         # bpth odds are pulled from bovada
-        hodds_site = aodds_site = 'bovada'
+        hodds_site = aodds_site = 'bovada.lv'
         # construct datetime object. divide by 1000 to fix time
         time = dt.fromtimestamp(event['startTime']/1000)
         m = match.Match(home, away, hodds, aodds, hodds_site, aodds_site, time)
