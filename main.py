@@ -5,25 +5,10 @@ from scrapers import bookmaker
 from scrapers import intertops
 from scrapers import heritage
 from match import Match
+from emailer import Emailer
 
 
-# define constants
 LEAGUE = 'nfl'
-
-
-def print_matches(bovada_matches, xbet_matches, bm_matches):
-    for b in bov_matches:
-        print bov_matches[b]
-
-    print '\n'
-
-    for x in xbet_matches:
-        print xbet_matches[x]
-
-    print '\n'
-
-    for bm in bm_matches:
-        print bm_matches[bm]
 
 
 def update_odds(primary, secondary):
@@ -38,36 +23,51 @@ def update_odds(primary, secondary):
                 print 'Found better odds for %s on %s' % (match.away_team, match.aodds_site)
 
 
-def find_profit(matches):
+def find_profit_opps(matches):
+    opps = []
     for k, v in matches.iteritems():
         if v.home_odds + v.away_odds > 0:
-            print 'Found profit opportunity'
-            v.print_with_site()
+            opps.append(v)
+    return opps
 
 
 def main():
     print 'Analyzing upcoming matches...'
 
-    bovscr = bovada.Bovada()
-    xbetscr = xbet.Xbet()
-    bmscr = bookmaker.Bookmaker()
-    interscr = intertops.Intertops()
-    herscr = heritage.Heritage()
+    # init all scraper classes
+    bov = bovada.Bovada()
+    xbt = xbet.Xbet()
+    bkmkr = bookmaker.Bookmaker()
+    inter = intertops.Intertops()
+    heri = heritage.Heritage()
 
-    # retrieve a dict of upcoming Match objects with Bovada odds
-    # matches keyed by match_id
-    bov_matches = bovscr.get_matches(LEAGUE)
-    xbet_matches = xbetscr.get_matches(LEAGUE)
-    bm_matches = bmscr.get_matches(LEAGUE)
-    it_matches = interscr.get_matches(LEAGUE)
-    her_matches = herscr.get_matches(LEAGUE)
+    # init emailer class
+    mailer = Emailer()
 
-    # compare scraped odds and update matches
-    update_odds(bov_matches, xbet_matches)
-    update_odds(bov_matches, bm_matches)
-    update_odds(bov_matches, it_matches)
-    update_odds(bov_matches, her_matches)
-    find_profit(bov_matches)
+    # use bovada as baseline odds
+    matches = bov.get_matches(LEAGUE)
+
+    # retrieve xbet data and update for better odds
+    new_odds = xbt.get_matches(LEAGUE)
+    update_odds(matches, new_odds)
+
+    # retrieve bookmaker data and update for better odds
+    new_odds = bkmkr.get_matches(LEAGUE)
+    update_odds(matches, new_odds)
+
+    # retrieve intertops data and update for better odds
+    new_odds = inter.get_matches(LEAGUE)
+    update_odds(matches, new_odds)
+
+    # retrieve heritage data and update for better off
+    new_odds = heri.get_matches(LEAGUE)
+    update_odds(matches, new_odds)
+
+
+    # return a list of matches with sure profit opportunities
+    opps = find_profit_opps(matches)
+    for o in opps:
+        print o
     print 'Execution complete'
 
 
