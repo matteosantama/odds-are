@@ -9,6 +9,8 @@ from emailer import Emailer
 
 
 LEAGUE = 'nfl'
+PROF = 'Sure Profit Opportunities'
+MUS = 'Upcoming Matchups'
 
 
 def update_odds(primary, secondary):
@@ -33,6 +35,13 @@ def find_profit_opps(matches):
         if v.home_odds + v.away_odds > 0:
             opps.append(v)
     return opps
+
+
+def upcoming(matches):
+    upco = []
+    for m in matches:
+        upco.append(str(matches[m]))
+    return upco
 
 
 def main():
@@ -68,15 +77,15 @@ def main():
     new_odds = inter.get_matches(LEAGUE)
     update_odds(matches, new_odds)
 
-    test = []
-    for m in matches:
-        test.append(str(matches[m]))
-
 
     # return a list of matches with sure profit opportunities
     opps = find_profit_opps(matches)
+    # get a list of upcoming matches in string form
+    match_strings = upcoming(matches)
+
     # send profit opps with new line characters inserted
-    mailer.send_opps('\n'.join(test))
+    mailer.send_mail(PROF, '\n'.join(opps))
+    mailer.send_mail(MUS, '\n'.join(match_strings))
 
     print 'Execution complete'
 

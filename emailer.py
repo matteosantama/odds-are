@@ -6,26 +6,21 @@ class Emailer(object):
 
 
     def __init__(self):
-        self.sender = 'sender@address.com'
-        self.recipients = ['list@recipients.com']
-        self.username = 'gmail_username'
-        self.psswd = 'gmail_psswd'
+        self.sender = 'msantdev@gmail.com'
+        self.recipients = ['matteosantama@gmail.com']
+        self.username = 'msantdev'
+        self.psswd = 'whtrad1ng'
 
 
-    def send_opps(self, body):
-        self.server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        self.server_ssl.ehlo()
-        self.server_ssl.login(self.username, self.psswd)
+    def send_mail(self, subject, body):
+        server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server_ssl.ehlo()
+        server_ssl.login(self.username, self.psswd)
 
-        subject = 'Sure Profit Opportunities'
+        msg = MIMEText(body)
+        msg['Subject'] = subject
+        msg['From'] = self.sender
+        msg['To'] = ', '.join(self.recipients)
 
-        text = """
-                From: %s
-                To: %s
-                Subject: %s
-
-                %s
-                """ % (self.sender, ', '.join(self.recipients), subject, body)
-
-        server.sendmail(self.sender, self.recipients, text)
-        server.close()
+        server_ssl.sendmail(self.sender, self.recipients, msg.as_string())
+        server_ssl.close()
