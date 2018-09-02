@@ -23,16 +23,11 @@ class Match(object):
     def __str__(self):
         if self.game_time is not None:
             pdate = self.game_time.strftime('%-m/%-d %-I:%M%p')
-            return_str = '%s (%s) is playing at %s (%s) on %s'
-            return return_str % (self.away_team, self.away_odds, self.home_team, self.home_odds, pdate)
+            return_str = '%s %s (%s) on %s at %s (%s) on %s'
+            return return_str % (pdate, self.away_team, self.away_odds, self.aodds_site, self.home_team, self.home_odds, self.hodds_site)
         else:
-            return_str = '%s (%s) is playing at %s (%s)'
-            return return_str % (self.away_team, self.away_odds, self.home_team, self.home_odds)
-
-
-    def print_with_site(self):
-        string = '%s (%s) on %s at %s (%s) on %s'
-        return string % (self.away_team, self.away_odds, self.aodds_site, self.home_team, self.home_odds, self.hodds_site)
+            return_str = '%s (%s) on %s at %s (%s) on %s'
+            return return_str % (self.away_team, self.away_odds, self.aodds_site, self.home_team, self.home_odds, self.hodds_site)
 
 
     def __eq__(self, obj):
