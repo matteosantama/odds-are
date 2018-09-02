@@ -23,7 +23,7 @@ logging.basicConfig(filename = 'output.log', format=FORMAT, datefmt = DATEFMT, l
 
 
 def update_odds(primary, secondary):
-    for key, match in secondary.iteritems():
+    for key, match in secondary.items():
         if key not in primary:
             logger.error('Could not find match for: %s', str(match))
         else:
@@ -39,7 +39,7 @@ def update_odds(primary, secondary):
 
 def find_profit_opps(matches):
     opps = []
-    for k, v in matches.iteritems():
+    for k, v in matches.items():
         if v.home_odds + v.away_odds > 0:
             opps.append(v)
     return opps
