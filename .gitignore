@@ -2,3 +2,4 @@
 *.pyc
 output.log
 /__pycache__/
+/scrapers/__pycache__/
