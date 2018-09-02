@@ -19,7 +19,8 @@ MUS = 'Upcoming Matchups'
 logger = logging.getLogger(__name__)
 FORMAT = '%(asctime)s:%(levelname)s: %(message)s'
 DATEFMT = '%m/%d/%Y %I:%M:%S%p'
-logging.basicConfig(filename = 'output.log', format=FORMAT, datefmt = DATEFMT, level = logging.INFO)
+FILENAME = 'output.log'
+logging.basicConfig(filename=FILENAME, filemode='w', format=FORMAT, datefmt=DATEFMT, level=logging.INFO)
 
 
 def update_odds(primary, secondary):
@@ -99,6 +100,7 @@ def main():
     # mailer.send_mail(PROF, '\n'.join(opps))
     mailer.send_mail(MUS, '\n'.join(match_strings))
 
+    mailer.send_log(FILENAME)
     logger.info('Execution successfully completed')
 
 

@@ -16,10 +16,10 @@ league_to_sport = {
 
 class Bovada(object):
 
-
     def __init__(self):
         self.api_url = 'https://www.bovada.lv/services/sports/event/v2/events/A/description/%s/%s'
         self.logger = logging.getLogger(__name__)
+
 
     def request_json(self, league):
         url = self.api_url % (league_to_sport[league], league)
