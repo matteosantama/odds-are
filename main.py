@@ -19,8 +19,12 @@ def update_odds(primary, secondary):
         else:
             if match.home_odds > primary[key].home_odds:
                 print 'Found better odds for %s on %s' % (match.home_team, match.hodds_site)
+                primary[key].home_odds = match.home_odds
+                primary[key].hodds_site = match.hodds_site
             if match.away_odds > primary[key].away_odds:
                 print 'Found better odds for %s on %s' % (match.away_team, match.aodds_site)
+                primary[key].away_odds = match.away_odds
+                primary[key].aodds_site = match.aodds_site
 
 
 def find_profit_opps(matches):
@@ -47,6 +51,11 @@ def main():
     # use bovada as baseline odds
     matches = bov.get_matches(LEAGUE)
 
+
+    # retrieve heritage data and update for better off
+    new_odds = heri.get_matches(LEAGUE)
+    update_odds(matches, new_odds)
+
     # retrieve xbet data and update for better odds
     new_odds = xbt.get_matches(LEAGUE)
     update_odds(matches, new_odds)
@@ -59,15 +68,16 @@ def main():
     new_odds = inter.get_matches(LEAGUE)
     update_odds(matches, new_odds)
 
-    # retrieve heritage data and update for better off
-    new_odds = heri.get_matches(LEAGUE)
-    update_odds(matches, new_odds)
+    test = []
+    for m in matches:
+        test.append(str(matches[m]))
 
 
     # return a list of matches with sure profit opportunities
     opps = find_profit_opps(matches)
-    for o in opps:
-        print o
+    # send profit opps with new line characters inserted
+    mailer.send_opps('\n'.join(test))
+
     print 'Execution complete'
 
 
