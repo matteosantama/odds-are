@@ -3,7 +3,7 @@ from scrapers import bovada
 from scrapers import xbet
 from scrapers import bookmaker
 from scrapers import intertops
-from scrapers import heritage
+from scrapers import sportsbet
 from match import Match
 from emailer import Emailer
 
@@ -61,7 +61,7 @@ def main():
     xbt = xbet.Xbet()
     bkmkr = bookmaker.Bookmaker()
     inter = intertops.Intertops()
-    # heri = heritage.Heritage()
+    sports = sportsbet.Sportsbet()
 
     # init emailer class
     mailer = Emailer()
@@ -72,8 +72,9 @@ def main():
 
 
     # retrieve heritage data and update for better off
-    # new_odds = heri.get_matches(LEAGUE)
-    # update_odds(matches, new_odds)
+    new_odds = sports.get_matches(LEAGUE)
+    logger.info('Successfully retrieved odds from sportsbook.ag')
+    update_odds(matches, new_odds)
 
     # retrieve xbet data and update for better odds
     new_odds = xbt.get_matches(LEAGUE)
@@ -96,13 +97,15 @@ def main():
     # get a list of upcoming matches in string form
     match_strings = upcoming(matches)
 
-    # send profit opps with new line characters inserted
-    # mailer.send_mail(PROF, '\n'.join(opps))
-    mailer.send_mail(MUS, '\n'.join(match_strings))
+    # send profit opps with new line characters inserted if any are detected
+    if len(opps) > 0:
+        mailer.send_mail(PROF, '\n'.join(opps))
+
+    # uncomment to send match logs
+    # mailer.send_mail(MUS, '\n'.join(match_strings))
 
     mailer.send_log(FILENAME)
     logger.info('Execution successfully completed')
-
 
 if __name__ == '__main__':
     main()
