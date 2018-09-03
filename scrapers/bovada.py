@@ -8,12 +8,6 @@ import sys
 import logging
 
 
-# global variables
-league_to_sport = {
-    'nfl': 'football',
-}
-
-
 class Bovada(object):
 
     def __init__(self):
@@ -21,8 +15,8 @@ class Bovada(object):
         self.logger = logging.getLogger(__name__)
 
 
-    def request_json(self, league):
-        url = self.api_url % (league_to_sport[league], league)
+    def request_json(self, league, sport):
+        url = self.api_url % (sport, league)
         r = requests.get(url)
         try:
             r.raise_for_status()
@@ -48,17 +42,16 @@ class Bovada(object):
 
         # extract outcomes from moneyline block in json
         outcomes = self.get_outcomes(event['displayGroups'][0]['markets'])
-
-        # handle the case where moneyline odds are not provided
-        if len(outcomes) == 0:
-            hodds = -sys.maxsize - 1
-            aodds = -sys.maxsize - 1
-        elif home is outcomes[0]['description']:
-            hodds = outcomes[0]['price']['american']
-            aodds = outcomes[1]['price']['american']
-        else:
-            aodds = outcomes[0]['price']['american']
-            hodds = outcomes[1]['price']['american']
+        hodds = -sys.maxsize - 1
+        aodds = -sys.maxsize - 1
+        # update moneylines if they exist
+        if outcomes is not None:
+            for team in outcomes:
+                # print(team)
+                if team['description'] == home:
+                    hodds = team['price']['american']
+                if team['description'] == away:
+                    aodds = team['price']['american']
 
         # bpth odds are pulled from bovada
         hodds_site = aodds_site = 'bovada.lv'
@@ -69,13 +62,14 @@ class Bovada(object):
         return m
 
 
-    def get_matches(self, sport):
-        json = self.request_json(sport)
+    def get_matches(self, league, sport):
+        json = self.request_json(league, sport)
         # isolate the useful part of the json response
         events = json[0]['events']
         matches = {}
         for ev in events:
-            m = self.extract_match(ev)
-            matches[m.key] = m
+            if ev['type'] == 'GAMEEVENT':
+                m = self.extract_match(ev)
+                matches[m.key] = m
 
         return matches
