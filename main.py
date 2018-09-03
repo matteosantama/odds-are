@@ -104,8 +104,9 @@ def main():
     # uncomment to send match logs
     # mailer.send_mail(MUS, '\n'.join(match_strings))
 
-    mailer.send_log(FILENAME)
+
     logger.info('Execution successfully completed')
+    mailer.send_log(FILENAME)
 
 if __name__ == '__main__':
     main()
