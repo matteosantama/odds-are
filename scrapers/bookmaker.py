@@ -9,21 +9,19 @@ import math
 import logging
 
 
-# global variables
-league_to_sport = {
-    'nfl': 'football',
-}
-
-
 class Bookmaker(object):
 
     def __init__(self):
         self.base_url = 'https://www.bookmaker.eu/live-lines/%s/%s'
         self.logger = logging.getLogger(__name__)
+        self.lgs = {
+            'football': 'nfl',
+            'baseball': 'major-league-baseball'
+        }
 
 
-    def request_html(self, league):
-        url = self.base_url % (league_to_sport[league], league)
+    def request_html(self, sport):
+        url = self.base_url % (sport, self.lgs[sport])
         header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'}
         r = requests.get(url, headers=header)
         try:
@@ -58,9 +56,9 @@ class Bookmaker(object):
         return m
 
 
-    def get_matches(self, league):
+    def get_matches(self, sport):
         # raw_html returns a string of the html
-        raw_html = self.request_html(league)
+        raw_html = self.request_html(sport)
         soup = BeautifulSoup(raw_html, 'html.parser')
         matchups = soup.find_all('div', class_='matchup')
         matches = {}

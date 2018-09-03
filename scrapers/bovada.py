@@ -13,10 +13,14 @@ class Bovada(object):
     def __init__(self):
         self.api_url = 'https://www.bovada.lv/services/sports/event/v2/events/A/description/%s/%s'
         self.logger = logging.getLogger(__name__)
+        self.lgs = {
+            'football': 'nfl',
+            'baseball': 'mlb'
+        }
 
 
-    def request_json(self, league, sport):
-        url = self.api_url % (sport, league)
+    def request_json(self, sport):
+        url = self.api_url % (sport, self.lgs[sport])
         r = requests.get(url)
         try:
             r.raise_for_status()
@@ -40,6 +44,12 @@ class Bovada(object):
         home = competitors[0]['name'] if competitors[0]['home'] else competitors[1]['name']
         away = competitors[1]['name'] if competitors[0]['home'] else competitors[1]['name']
 
+        # handle various spellings and abbreviations
+        if home == 'St. Louis Cardinals':
+            home = 'Saint Louis Cardinals'
+        if away == 'St. Louis Cardinals':
+            away = 'Saint Louis Cardinals'
+
         # extract outcomes from moneyline block in json
         outcomes = self.get_outcomes(event['displayGroups'][0]['markets'])
         hodds = -sys.maxsize - 1
@@ -62,8 +72,8 @@ class Bovada(object):
         return m
 
 
-    def get_matches(self, league, sport):
-        json = self.request_json(league, sport)
+    def get_matches(self, sport):
+        json = self.request_json(sport)
         # isolate the useful part of the json response
         events = json[0]['events']
         matches = {}
