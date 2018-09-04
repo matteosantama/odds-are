@@ -12,7 +12,7 @@ import logging
 
 
 # global constants
-SUPP_SPORTS = ['football', 'baseball']
+SUPP_SPORTS = ['baseball']
 PROF = 'Sure Profit Opportunities'
 MUS = 'Upcoming Matchups'
 
@@ -47,11 +47,11 @@ def find_profit_opps(matches):
     return opps
 
 
-def upcoming(matches):
-    upco = []
+def match_strings(matches):
+    strings = []
     for m in matches:
-        upco.append(str(matches[m]))
-    return upco
+        strings.append(str(matches[m]))
+    return strings
 
 
 def main():
@@ -70,8 +70,6 @@ def main():
     # maintain a dictionary of match objects keyed by their match hash
     matches = {}
     for spo in SUPP_SPORTS:
-        if spo == 'football': # TESTING PURPOSES ONLY LOOK AT BASEBALL
-            continue
 
         # use bovada as baseline odds
         bov_matches = bov.get_matches(spo)
@@ -80,13 +78,13 @@ def main():
         logger.info('Successfully retrieved %s odds from bovada.lv', spo)
 
         # retrieve sportsbet data and update for better off
-        # new_odds = sports.get_matches(lg)
-        # logger.info('Successfully retrieved %s odds from sportsbook.ag', lg)
+        # new_odds = sports.get_matches(spo)
+        # logger.info('Successfully retrieved %s odds from sportsbook.ag', spo)
         # update_odds(matches, new_odds)
 
         # retrieve xbet data and update for better odds
-        # new_odds = xbt.get_matches(lg)
-        # logger.info('Successfully retrieved %s odds from xbet.ag', lg)
+        # new_odds = xbt.get_matches(spo)
+        # logger.info('Successfully retrieved %s odds from xbet.ag', spo)
         # update_odds(matches, new_odds)
 
         # retrieve bookmaker data and update for better odds
@@ -97,28 +95,25 @@ def main():
         # retrieve intertops data and update for better odds
         new_odds = inter.get_matches(spo)
         logger.info('Successfully retrieved %s odds from intertops.eu', spo)
-        # update_odds(matches, new_odds)
+        update_odds(matches, new_odds)
 
 
     # return a list of matches with sure profit opportunities
-    # opps = find_profit_opps(matches)
+    opps = find_profit_opps(matches)
     # get a list of upcoming matches in string form
-    # match_strings = upcoming(matches)
+    strings = match_strings(matches)
 
     # TESTING
-    # for k in new_odds:
-    #     if k in bov_matches:
-    #         print('yes')
-    #     else:
-    #         print('no')
-    #         print(new_odds[k])
-    # print('\n'.join(upcoming(new_odds)))
-    # print('break')
-    # print('\n'.join(upcoming(matches)))
+    for k in new_odds:
+        if k in bov_matches:
+            print('yes')
+        else:
+            print('no')
+            print(new_odds[k])
 
     # send profit opps with new line characters inserted if any are detected
     # if len(opps) > 0:
-    #     mailer.send_mail(PROF, '\n'.join(opps))
+    #     mailer.send_mail(PROF, '\n'.join(upcoming(opps)))
 
     # uncomment to send match logs
     # mailer.send_mail(MUS, '\n'.join(match_strings))

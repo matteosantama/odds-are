@@ -22,15 +22,34 @@ class Intertops(object):
         self.teams = {
             'ARI': 'Arizona Diamondbacks',
             'ATL': 'Atlanta Braves',
-            'BAl': 'Baltimore Orioles',
+            'BAL': 'Baltimore Orioles',
             'BOS': 'Boston Red Sox',
             'CHC': 'Chicago Cubs',
-            TDB: 'Chicago White Sox',
+            'CWS': 'Chicago White Sox',
             'CIN': 'Cincinnati Reds',
             'CLE': 'Cleveland Indians',
             'COL': 'Colorado Rockies',
             'DET': 'Detroit Tigers',
-            'FLA': 'Florida Marlins'
+            'FLA': 'Florida Marlins',
+            'HOU': 'Houston Astros',
+            'KAN': 'Kansas City Royals',
+            'LAA': 'Los Angeles Angels',
+            'LOS': 'Los Angeles Dodgers',
+            'MIL': 'Milwaukee Brewers',
+            'MIN': 'Minnesota Twins',
+            'NYM': 'New York Mets',
+            'NYY': 'New York Yankees',
+            'OAK': 'Oakland Athletics',
+            'PHI': 'Philadelphia Phillies',
+            'PIT': 'Pittsburgh Pirates',
+            'SDG': 'San Diego Padres',
+            'SFO': 'San Francisco Giants',
+            'SEA': 'Seattle Mariners',
+            'STL': 'Saint Louis Cardinals',
+            'TPB': 'Tampa Bay Rays',
+            'TEX': 'Texas Rangers',
+            'TOR': 'Toronto Blue Jays',
+            'WAS': 'Washington Nationals'
         }
 
 
@@ -61,12 +80,12 @@ class Intertops(object):
         home_tag = row.find('div', class_='usbot').text.strip()
 
         # when odds are updated, the title attribute gets renamed 'data-original-title'
-        aodds = row.find('div', {'title': away})
+        aodds = row.find('div', {'title': away_tag})
         if aodds is None:
-            aodds = row.find('div', {'data-original-title': away})
-        hodds = row.find('div', {'title': home})
+            aodds = row.find('div', {'data-original-title': away_tag})
+        hodds = row.find('div', {'title': home_tag})
         if hodds is None:
-            hodds = row.find('div', {'data-original-title': home})
+            hodds = row.find('div', {'data-original-title': home_tag})
 
         try:
             aodds = aodds.text.strip()
