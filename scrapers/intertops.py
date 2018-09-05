@@ -99,7 +99,6 @@ class Intertops(object):
 
         site = 'intertops.eu'
         m = match.Match(home, away, hodds, aodds, site, site)
-        print(m)
 
         return m
 

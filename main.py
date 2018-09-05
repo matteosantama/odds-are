@@ -78,9 +78,9 @@ def main():
         logger.info('Successfully retrieved %s odds from bovada.lv', spo)
 
         # retrieve sportsbet data and update for better off
-        # new_odds = sports.get_matches(spo)
-        # logger.info('Successfully retrieved %s odds from sportsbook.ag', spo)
-        # update_odds(matches, new_odds)
+        new_odds = sports.get_matches(spo)
+        logger.info('Successfully retrieved %s odds from sportsbook.ag', spo)
+        update_odds(matches, new_odds)
 
         # retrieve xbet data and update for better odds
         # new_odds = xbt.get_matches(spo)
@@ -93,9 +93,9 @@ def main():
         # update_odds(matches, new_odds)
 
         # retrieve intertops data and update for better odds
-        new_odds = inter.get_matches(spo)
-        logger.info('Successfully retrieved %s odds from intertops.eu', spo)
-        update_odds(matches, new_odds)
+        # new_odds = inter.get_matches(spo)
+        # logger.info('Successfully retrieved %s odds from intertops.eu', spo)
+        # update_odds(matches, new_odds)
 
 
     # return a list of matches with sure profit opportunities
