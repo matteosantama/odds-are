@@ -11,7 +11,8 @@ from emailer import Emailer
 import logging
 
 
-LEAGUE = 'nfl'
+# global constants
+SUPP_SPORTS = ['football']
 PROF = 'Sure Profit Opportunities'
 MUS = 'Upcoming Matchups'
 
@@ -46,11 +47,11 @@ def find_profit_opps(matches):
     return opps
 
 
-def upcoming(matches):
-    upco = []
+def match_strings(matches):
+    strings = []
     for m in matches:
-        upco.append(str(matches[m]))
-    return upco
+        strings.append(str(matches[m]))
+    return strings
 
 
 def main():
@@ -66,47 +67,53 @@ def main():
     # init emailer class
     mailer = Emailer()
 
-    # use bovada as baseline odds
-    matches = bov.get_matches(LEAGUE)
-    logger.info('Successfully retrieved odds from bovada.lv')
+    # maintain a dictionary of match objects keyed by their match hash
+    matches = {}
+    for spo in SUPP_SPORTS:
 
+        # use bovada as baseline odds
+        bov_matches = bov.get_matches(spo)
+        # add them to our master dictionary of matches
+        matches.update(bov_matches)
+        logger.info('Successfully retrieved %s odds from bovada.lv', spo)
 
-    # retrieve heritage data and update for better off
-    new_odds = sports.get_matches(LEAGUE)
-    logger.info('Successfully retrieved odds from sportsbook.ag')
-    update_odds(matches, new_odds)
+        # retrieve sportsbet data and update for better off
+        new_odds = sports.get_matches(spo)
+        logger.info('Successfully retrieved %s odds from sportsbetting.ag', spo)
+        update_odds(matches, new_odds)
 
-    # retrieve xbet data and update for better odds
-    new_odds = xbt.get_matches(LEAGUE)
-    logger.info('Successfully retrieved odds from xbet.ag')
-    update_odds(matches, new_odds)
+        # retrieve xbet data and update for better odds
+        new_odds = xbt.get_matches(spo)
+        logger.info('Successfully retrieved %s odds from xbet.ag', spo)
+        update_odds(matches, new_odds)
 
-    # retrieve bookmaker data and update for better odds
-    new_odds = bkmkr.get_matches(LEAGUE)
-    logger.info('Successfully retrieved odds from bookmaker.eu')
-    update_odds(matches, new_odds)
+        # retrieve bookmaker data and update for better odds
+        new_odds = bkmkr.get_matches(spo)
+        logger.info('Successfully retrieved %s odds from bookmaker.eu', spo)
+        update_odds(matches, new_odds)
 
-    # retrieve intertops data and update for better odds
-    new_odds = inter.get_matches(LEAGUE)
-    logger.info('Successfully retrieved odds from intertops.eu')
-    update_odds(matches, new_odds)
+        # retrieve intertops data and update for better odds
+        new_odds = inter.get_matches(spo)
+        logger.info('Successfully retrieved %s odds from intertops.eu', spo)
+        update_odds(matches, new_odds)
 
 
     # return a list of matches with sure profit opportunities
     opps = find_profit_opps(matches)
-    # get a list of upcoming matches in string form
-    match_strings = upcoming(matches)
+    # get the list of upcoming matches in string form
+    strings = match_strings(matches)
+
 
     # send profit opps with new line characters inserted if any are detected
     if len(opps) > 0:
-        mailer.send_mail(PROF, '\n'.join(opps))
+        mailer.send_mail(PROF, '\n'.join(match_strings(opps)))
 
     # uncomment to send match logs
-    # mailer.send_mail(MUS, '\n'.join(match_strings))
-
+    mailer.send_mail(MUS, '\n'.join(strings))
 
     logger.info('Execution successfully completed')
     mailer.send_log(FILENAME)
+
 
 if __name__ == '__main__':
     main()
