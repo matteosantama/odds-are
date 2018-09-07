@@ -7,6 +7,7 @@ import requests
 import sys
 import math
 import logging
+from datetime import datetime as dt
 
 
 class Bookmaker(object):
@@ -33,6 +34,18 @@ class Bookmaker(object):
         return r.content
 
 
+    def parse_date(self, html):
+        time = html.find_previous_sibling().text.strip()
+        date_header = html.find_parent('div', class_='externalLinesPage').find('div', class_='linesSubhead').text
+        # check if the game is in the following year
+        yr = dt.today().timedelta(year=1).yr if (dt.today().year == 12 and date_header[-7:-4] == 'Jan') else dt.today().year
+        # construct date string in the following format: '%b %d %I:%M %p %Y'
+        date_string = date_header[-7:] + time + ' ' + str(yr)
+        date = dt.strptime(date_string, '%b %d %I:%M %p %Y')
+
+        return date
+
+
     def extract_match(self, html):
         visitor_html = html.find('div', class_='vTeam')
         home_html = html.find('div', class_='hTeam')
@@ -51,8 +64,10 @@ class Bookmaker(object):
         else:
             hodds = -sys.maxsize - 1
 
+        date = self.parse_date(html)
         site = 'bookmaker.eu'
-        m = match.Match(home, visitor, hodds, vodds, site, site)
+
+        m = match.Match(home, visitor, hodds, vodds, site, site, date)
         return m
 
 
