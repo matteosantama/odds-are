@@ -11,7 +11,7 @@ class Emailer(object):
 
     def __init__(self):
         self.developer = 'msantdev@gmail.com'
-        self.recipients = ['matteosantama@gmail.com']
+        self.recipients = ['matteosantama@gmail.com', 'orosenfeld6@gmail.com']
         self.username = 'msantdev'
         self.psswd = 'whtrad1ng'
         self.logger = logging.getLogger(__name__)

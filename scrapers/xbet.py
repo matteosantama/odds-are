@@ -29,7 +29,25 @@ class Xbet(object):
             'bal orioles': 'Baltimore Orioles',
             'sea mariners': 'Seattle Mariners',
             'was nationals': 'Washington National',
-            'stl cardinals': 'Saint Louis Cardinals'
+            'stl cardinals': 'Saint Louis Cardinals',
+            'chi cubs': 'Chicago Cubs',
+            'mil brewers': 'Milwaukee Brewers',
+            'la angels': 'Los Angeles Angels',
+            'tex rangers': 'Texas Rangers',
+            'min twins': 'Minnesota Twins',
+            'hou astros': 'Houston Astros',
+            'chi white sox': 'Chicago White Sox',
+            'det tigers': 'Detroit Tigers',
+            'cle indians': 'Cleveland Indians',
+            'tor blue jays': 'Toronto Blue Jays',
+            'atl braves': 'Atlanta Braves',
+            'cin reds': 'Cincinatti Reds',
+            'bos red sox': 'Boston Red Sox',
+            'tb rays': 'Tampa Bay Rays',
+            'kc royals': 'Kansas City Royals'
+            'phi phillies': 'Philadelphia Phillies',
+            'mia marlins': 'Miami Marlins',
+            'pit pirates': 'Pittsburgh Pirates'
         }
 
 
