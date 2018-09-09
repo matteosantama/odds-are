@@ -2,6 +2,8 @@
 import match
 
 # library imports
+from datetime import datetime as dt
+from datetime import timezone
 from bs4 import BeautifulSoup
 import requests
 import sys
@@ -74,6 +76,14 @@ class Intertops(object):
         return self.teams[home_arr[0]], self.teams[away_arr[0]]
 
 
+    def parse_date(self, row):
+        span = row.find('span', class_='eventdatetime ')
+        date_string = span['title'] if span['title'] is not None else span['data-original-title']
+        date = dt.strptime(date_string, '%m/%d/%Y<br/>%I:%M %p')
+        # convert from utc to local timezone
+        return date.replace(tzinfo=timezone.utc).astimezone(tz=None)
+
+
     def extract_match(self, row):
         # *_tag is a variable that contains the three letter code and pitcher for each team
         away_tag = row.find('div', class_='ustop').text.strip()
@@ -97,8 +107,9 @@ class Intertops(object):
         # convert team tags into universal team names
         home, away = self.get_team_names(home_tag, away_tag)
 
+        date = self.parse_date(row)
         site = 'intertops.eu'
-        m = match.Match(home, away, hodds, aodds, site, site)
+        m = match.Match(home, away, hodds, aodds, site, site, date)
 
         return m
 

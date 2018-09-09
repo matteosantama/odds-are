@@ -2,6 +2,7 @@
 import match
 
 # library imports
+from datetime import datetime as dt
 from bs4 import BeautifulSoup
 import requests
 import sys
@@ -44,7 +45,7 @@ class Xbet(object):
             'cin reds': 'Cincinatti Reds',
             'bos red sox': 'Boston Red Sox',
             'tb rays': 'Tampa Bay Rays',
-            'kc royals': 'Kansas City Royals'
+            'kc royals': 'Kansas City Royals',
             'phi phillies': 'Philadelphia Phillies',
             'mia marlins': 'Miami Marlins',
             'pit pirates': 'Pittsburgh Pirates'
@@ -64,6 +65,16 @@ class Xbet(object):
 
 
     def extract_match(self, html, sport):
+        # get the day of the week and day number in the form 'Sep 09'
+        parent = html.parent.parent.find_previous_sibling('div', class_='myb-sportbook__header-margin-0')
+        month = parent.find('h4', class_='header-game').text.strip().split(' - ')[-1]
+        time = html.find('span', class_='myb-sportbook__date').text.strip()
+        # check if the game is in the following year
+        yr = (dt.today().year + 1) if (dt.today().year == 12 and month[:3] == 'Jan') else dt.today().year
+        # construct date string in format 'Sep 09 2018 SUN4:25 PM'
+        date_string = '%s %d %s' % (month, yr, time)
+        date = dt.strptime(date_string, '%b %d %Y %a%I:%M %p')
+
         # html parsing filters
         search_filter = {'data-wager-type':'ml'}
         afilter = 'myb-sportbook__row-first-team'
@@ -78,7 +89,7 @@ class Xbet(object):
 
         site = 'xbet.ag'
 
-        m = match.Match(home, away, hhtml['data-odds'], ahtml['data-odds'], site, site)
+        m = match.Match(home, away, hhtml['data-odds'], ahtml['data-odds'], site, site, date)
         # return an individual match
         return m
 

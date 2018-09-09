@@ -38,7 +38,7 @@ class Bookmaker(object):
         time = html.find_previous_sibling().text.strip()
         date_header = html.find_parent('div', class_='externalLinesPage').find('div', class_='linesSubhead').text
         # check if the game is in the following year
-        yr = dt.today().timedelta(year=1).yr if (dt.today().year == 12 and date_header[-7:-4] == 'Jan') else dt.today().year
+        yr = (dt.today().year + 1) if (dt.today().year == 12 and date_header[-7:-4] == 'Jan') else dt.today().year
         # construct date string in the following format: '%b %d %I:%M %p %Y'
         date_string = date_header[-7:] + time + ' ' + str(yr)
         date = dt.strptime(date_string, '%b %d %I:%M %p %Y')

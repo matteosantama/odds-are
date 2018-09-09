@@ -2,6 +2,8 @@
 import match
 
 # library imports
+from datetime import datetime as dt
+from datetime import timedelta
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -34,6 +36,12 @@ class Sportsbet(object):
 
 
     def extract_match(self, tbody):
+        day_month_year = tbody.find_previous_sibling('tbody', class_='date expanded').text.split(' - ')[0].strip()
+        time = tbody.find('td', class_='col_time').text.strip()
+        date_string = day_month_year + ' ' + time
+        # convert to datetime object and adjust timezone
+        date = dt.strptime(date_string, '%A, %b %m, %Y %I:%M %p') - timedelta(hours = 1)
+
         away_data = tbody.find('tr', class_='firstline')
         home_data = tbody.find('tr', class_='otherline')
 
