@@ -8,6 +8,7 @@ import sys
 import math
 import logging
 from datetime import datetime as dt
+from datetime import timedelta
 
 
 class Bookmaker(object):
@@ -41,7 +42,7 @@ class Bookmaker(object):
         yr = (dt.today().year + 1) if (dt.today().year == 12 and date_header[-7:-4] == 'Jan') else dt.today().year
         # construct date string in the following format: '%b %d %I:%M %p %Y'
         date_string = date_header[-7:] + time + ' ' + str(yr)
-        date = dt.strptime(date_string, '%b %d %I:%M %p %Y')
+        date = dt.strptime(date_string, '%b %d %I:%M %p %Y') + timedelta(hours = 2)
 
         return date
 

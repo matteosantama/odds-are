@@ -40,7 +40,7 @@ class Sportsbet(object):
         time = tbody.find('td', class_='col_time').text.strip()
         date_string = day_month_year + ' ' + time
         # convert to datetime object and adjust timezone
-        date = dt.strptime(date_string, '%A, %b %m, %Y %I:%M %p') - timedelta(hours = 1)
+        date = dt.strptime(date_string, '%A, %b %d, %Y %I:%M %p') - timedelta(hours = 1)
 
         away_data = tbody.find('tr', class_='firstline')
         home_data = tbody.find('tr', class_='otherline')
@@ -61,7 +61,7 @@ class Sportsbet(object):
         aodds = (-sys.maxsize - 1) if aodds is None else aodds
 
         site = 'sportsbetting.ag'
-        m = match.Match(home, away, hodds, aodds, site, site)
+        m = match.Match(home, away, hodds, aodds, site, site, date)
 
         return m
 

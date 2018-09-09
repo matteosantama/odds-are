@@ -77,7 +77,7 @@ class Intertops(object):
 
 
     def parse_date(self, row):
-        span = row.find('span', class_='eventdatetime ')
+        span = row.find('span', class_='eventdatetime')
         date_string = span['title'] if span['title'] is not None else span['data-original-title']
         date = dt.strptime(date_string, '%m/%d/%Y<br/>%I:%M %p')
         # convert from utc to local timezone

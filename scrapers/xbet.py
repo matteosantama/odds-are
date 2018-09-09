@@ -3,6 +3,7 @@ import match
 
 # library imports
 from datetime import datetime as dt
+from datetime import timedelta
 from bs4 import BeautifulSoup
 import requests
 import sys
@@ -71,9 +72,9 @@ class Xbet(object):
         time = html.find('span', class_='myb-sportbook__date').text.strip()
         # check if the game is in the following year
         yr = (dt.today().year + 1) if (dt.today().year == 12 and month[:3] == 'Jan') else dt.today().year
-        # construct date string in format 'Sep 09 2018 SUN4:25 PM'
+        # construct date string in format 'Sep 09 2018 SUN4:25 PM' and adjust timezone
         date_string = '%s %d %s' % (month, yr, time)
-        date = dt.strptime(date_string, '%b %d %Y %a%I:%M %p')
+        date = dt.strptime(date_string, '%b %d %Y %a%I:%M %p') - timedelta(hours = 1)
 
         # html parsing filters
         search_filter = {'data-wager-type':'ml'}
