@@ -23,14 +23,14 @@ class Xbet(object):
             'sfo giants': 'San Francisco Giants',
             'col rockies': 'Colorado Rockies',
             'sdg padres': 'San Diego Padres',
-            'ari diamondbacks': 'Arizona Diamonbacks',
+            'ari diamondbacks': 'Arizona Diamondbacks',
             'ny mets': 'New York Mets',
             'la dodgers': 'Los Angeles Dodgers',
             'ny yankees': 'New York Yankees',
             'oak athletics': 'Oakland Athletics',
             'bal orioles': 'Baltimore Orioles',
             'sea mariners': 'Seattle Mariners',
-            'was nationals': 'Washington National',
+            'was nationals': 'Washington Nationals',
             'stl cardinals': 'Saint Louis Cardinals',
             'chi cubs': 'Chicago Cubs',
             'mil brewers': 'Milwaukee Brewers',
@@ -43,7 +43,7 @@ class Xbet(object):
             'cle indians': 'Cleveland Indians',
             'tor blue jays': 'Toronto Blue Jays',
             'atl braves': 'Atlanta Braves',
-            'cin reds': 'Cincinatti Reds',
+            'cin reds': 'Cincinnati Reds',
             'bos red sox': 'Boston Red Sox',
             'tb rays': 'Tampa Bay Rays',
             'kc royals': 'Kansas City Royals',
@@ -67,7 +67,7 @@ class Xbet(object):
 
     def extract_match(self, html, sport):
         # get the day of the week and day number in the form 'Sep 09'
-        parent = html.parent.parent.find_previous_sibling('div', class_='myb-sportbook__header-margin-0')
+        parent = html.find_parent('div', class_='myb-sportbook__tab-pane')
         month = parent.find('h4', class_='header-game').text.strip().split(' - ')[-1]
         time = html.find('span', class_='myb-sportbook__date').text.strip()
         # check if the game is in the following year

@@ -41,7 +41,7 @@ class Bookmaker(object):
         # check if the game is in the following year
         yr = (dt.today().year + 1) if (dt.today().year == 12 and date_header[-7:-4] == 'Jan') else dt.today().year
         # construct date string in the following format: '%b %d %I:%M %p %Y'
-        date_string = date_header[-7:] + time + ' ' + str(yr)
+        date_string = '%s %s %d' % (date_header[-7:-1], time, yr)
         date = dt.strptime(date_string, '%b %d %I:%M %p %Y') + timedelta(hours = 2)
 
         return date

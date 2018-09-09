@@ -27,16 +27,17 @@ logging.basicConfig(filename=FILENAME, filemode='w', format=FORMAT, datefmt=DATE
 def update_odds(primary, secondary):
     for key, match in secondary.items():
         if key not in primary:
-            logger.error('Could not find match for: %s', str(match))
-        else:
-            if match.home_odds > primary[key].home_odds:
-                logger.info('Found better odds for %s on %s', match.home_team, match.hodds_site)
-                primary[key].home_odds = match.home_odds
-                primary[key].hodds_site = match.hodds_site
-            if match.away_odds > primary[key].away_odds:
-                logger.info('Found better odds for %s on %s', match.home_team, match.hodds_site)
-                primary[key].away_odds = match.away_odds
-                primary[key].aodds_site = match.aodds_site
+            # if we've found a match not included in the original data, add it
+            primary[key] = match
+
+        if match.home_odds > primary[key].home_odds:
+            logger.info('Found better odds for %s on %s', match.home_team, match.hodds_site)
+            primary[key].home_odds = match.home_odds
+            primary[key].hodds_site = match.hodds_site
+        if match.away_odds > primary[key].away_odds:
+            logger.info('Found better odds for %s on %s', match.home_team, match.hodds_site)
+            primary[key].away_odds = match.away_odds
+            primary[key].aodds_site = match.aodds_site
 
 
 def find_profit_opps(matches):

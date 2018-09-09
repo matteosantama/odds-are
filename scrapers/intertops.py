@@ -3,7 +3,6 @@ import match
 
 # library imports
 from datetime import datetime as dt
-from datetime import timezone
 from bs4 import BeautifulSoup
 import requests
 import sys
@@ -81,7 +80,8 @@ class Intertops(object):
         date_string = span['title'] if span['title'] is not None else span['data-original-title']
         date = dt.strptime(date_string, '%m/%d/%Y<br/>%I:%M %p')
         # convert from utc to local timezone
-        return date.replace(tzinfo=timezone.utc).astimezone(tz=None)
+        # return date.replace(tzinfo=timezone.utc).astimezone(tz=None)
+        return date
 
 
     def extract_match(self, row):
