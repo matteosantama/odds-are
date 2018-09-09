@@ -12,7 +12,7 @@ import logging
 
 
 # global constants
-SUPP_SPORTS = ['football']
+SUPP_SPORTS = ['football', 'baseball']
 PROF = 'Sure Profit Opportunities'
 MUS = 'Upcoming Matchups'
 
@@ -65,12 +65,14 @@ def main():
     inter = intertops.Intertops()
     sports = sportsbet.Sportsbet()
 
-    # init emailer class
+    # init emailer class and an empty message
     mailer = Emailer()
+    message = ''
 
     # maintain a dictionary of match objects keyed by their match hash
     matches = {}
     for spo in SUPP_SPORTS:
+        message += spo + '\n'
 
         # use bovada as baseline odds
         bov_matches = bov.get_matches(spo)
@@ -98,6 +100,8 @@ def main():
         logger.info('Successfully retrieved %s odds from intertops.eu', spo)
         update_odds(matches, new_odds)
 
+        messages += '\n'
+
 
     # return a list of matches with sure profit opportunities
     opps = find_profit_opps(matches)
@@ -109,8 +113,10 @@ def main():
     if len(opps) > 0:
         mailer.send_mail(PROF, '\n'.join(match_strings(opps)))
 
+
+    message.append('\n'.join(strings))
     # uncomment to send match logs
-    mailer.send_mail(MUS, '\n'.join(strings))
+    mailer.send_mail(MUS, message)
 
     logger.info('Execution successfully completed')
     mailer.send_log(FILENAME)
