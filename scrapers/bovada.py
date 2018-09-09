@@ -30,7 +30,7 @@ class Bovada(object):
 
         return r.json()
 
-
+    # isolate moneyline odds
     def get_outcomes(self, markets):
         for m in markets:
             if m['description'] == 'Moneyline':

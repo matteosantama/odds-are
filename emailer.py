@@ -17,6 +17,7 @@ class Emailer(object):
         self.logger = logging.getLogger(__name__)
 
 
+    # send a message with a specified subject and body to recipients list
     def send_mail(self, subject, body):
         server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server_ssl.ehlo()
@@ -33,6 +34,7 @@ class Emailer(object):
         server_ssl.close()
 
 
+    # send an email containing the 'file_name' file to the developer
     def send_log(self, file_name):
         server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server_ssl.ehlo()

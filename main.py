@@ -24,6 +24,8 @@ FILENAME = 'output.log'
 logging.basicConfig(filename=FILENAME, filemode='w', format=FORMAT, datefmt=DATEFMT, level=logging.INFO)
 
 
+# if better odds for a match exist in the secondary dictionary,
+# update the primary dictionary
 def update_odds(primary, secondary):
     for key, match in secondary.items():
         if key not in primary:
@@ -40,6 +42,7 @@ def update_odds(primary, secondary):
             primary[key].aodds_site = match.aodds_site
 
 
+# filter through all matches and look for guaranteed profit scenarios
 def find_profit_opps(matches):
     opps = []
     for k, v in matches.items():
@@ -48,6 +51,7 @@ def find_profit_opps(matches):
     return opps
 
 
+# given a list of matches, return a list of the string representations
 def match_strings(matches):
     strings = []
     for m in matches:
@@ -114,6 +118,7 @@ def main():
         mailer.send_mail(PROF, '\n'.join(match_strings(opps)))
 
 
+    # add all upcoming matches to the message
     message.append('\n'.join(strings))
     # uncomment to send match logs
     mailer.send_mail(MUS, message)
